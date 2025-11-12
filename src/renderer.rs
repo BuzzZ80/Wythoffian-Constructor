@@ -33,16 +33,24 @@ impl Renderer {
         clear_background(BLACK);
 
         for (a, b) in self.edges.iter() {
-            let a_perspective: f32 = self.vertices[*a].z + self.z_dist; 
-            let b_perspective: f32 = self.vertices[*b].z + self.z_dist;
-            draw_line(
-                self.zoom * self.vertices[*a].x / a_perspective + screen_width()/2., 
-                self.zoom * self.vertices[*a].y / a_perspective + screen_height()/2., 
-                self.zoom * self.vertices[*b].x / b_perspective + screen_width()/2., 
-                self.zoom * self.vertices[*b].y / b_perspective + screen_height()/2., 
-                self.line_width, 
-                WHITE
-            );
+            let subdivisions = 12;
+            for i in 0..subdivisions {
+                let a_perspective: f32 = f32::lerp(self.vertices[*a].z, self.vertices[*b].z, (i as f32) / (subdivisions as f32)) + self.z_dist; 
+                let b_perspective: f32 = f32::lerp(self.vertices[*a].z, self.vertices[*b].z, ((i + 1) as f32) / (subdivisions as f32)) + self.z_dist;
+                draw_line(
+                    self.zoom * f32::lerp(self.vertices[*a].x, self.vertices[*b].x, (i as f32) / (subdivisions as f32)) / a_perspective + screen_width()/2., 
+                    self.zoom * f32::lerp(self.vertices[*a].y, self.vertices[*b].y, (i as f32) / (subdivisions as f32)) / a_perspective + screen_height()/2., 
+                    self.zoom * f32::lerp(self.vertices[*a].x, self.vertices[*b].x, ((i + 1) as f32) / (subdivisions as f32)) / b_perspective + screen_width()/2., 
+                    self.zoom * f32::lerp(self.vertices[*a].y, self.vertices[*b].y, ((i + 1) as f32) / (subdivisions as f32)) / b_perspective + screen_height()/2., 
+                    self.line_width,
+                    Color { 
+                        r: 1.0,
+                        g: 1.0,
+                        b: 1.0,
+                        a: 1.0 - clamp((a_perspective - self.z_dist) * 2.0 + 0.5, 0.0, 1.0)
+                    }
+                );
+            }
         }
     }
 
