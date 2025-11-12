@@ -1,3 +1,5 @@
+use core::f32;
+
 use crate::{DIM, Vector};
 use macroquad::prelude::*;
 
@@ -37,6 +39,14 @@ impl Renderer {
             for i in 0..subdivisions {
                 let a_perspective: f32 = f32::lerp(self.vertices[*a].z, self.vertices[*b].z, (i as f32) / (subdivisions as f32)) + self.z_dist; 
                 let b_perspective: f32 = f32::lerp(self.vertices[*a].z, self.vertices[*b].z, ((i + 1) as f32) / (subdivisions as f32)) + self.z_dist;
+                
+                let average_z = f32::lerp(self.vertices[*a].z, self.vertices[*b].z, ((i as f32) + 0.5) / (subdivisions as f32));
+                
+                let center_of_edge = self.vertices[*a].lerp(&self.vertices[*b], ((i as f32) + 0.5) / (subdivisions as f32));
+                
+                let average_off_axis = center_of_edge.iter()
+                    .skip(3).map(|h| h*h).sum::<f32>().sqrt();
+                
                 draw_line(
                     self.zoom * f32::lerp(self.vertices[*a].x, self.vertices[*b].x, (i as f32) / (subdivisions as f32)) / a_perspective + screen_width()/2., 
                     self.zoom * f32::lerp(self.vertices[*a].y, self.vertices[*b].y, (i as f32) / (subdivisions as f32)) / a_perspective + screen_height()/2., 
@@ -47,7 +57,7 @@ impl Renderer {
                         r: 1.0,
                         g: 1.0,
                         b: 1.0,
-                        a: 1.0 - clamp((a_perspective - self.z_dist) * 2.0 + 0.5, 0.0, 1.0)
+                        a: (1.0 - clamp(average_z * 2.0 + 0.5, 0.0, 1.0)) * (1.0 - clamp(f32::abs(average_off_axis) * 2.0, 0.0, 1.0))
                     }
                 );
             }
