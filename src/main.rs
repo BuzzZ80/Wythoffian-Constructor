@@ -13,11 +13,11 @@ const DIM: usize = 4;
 // Coxeter diagram's matrix and ringed nodes
 const COXMAT: [[u8; DIM]; DIM] = [
     [1, 3, 2, 2],
-    [3, 1, 4, 2],
-    [2, 4, 1, 3],
-    [2, 2, 3, 1],
+    [3, 1, 3, 2],
+    [2, 3, 1, 3],
+    [2, 2, 3, 1]
 ];
-const RINGS: [bool; DIM] = [true, false, false, false];
+const RINGS: [bool; DIM] = [true, false, true, false];
 
 
 // special types used throughout the code
