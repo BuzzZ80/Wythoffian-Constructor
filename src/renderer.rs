@@ -41,10 +41,10 @@ impl Renderer {
         clear_background(BLACK);
 
         for (a, b) in self.edges.iter() {
-            let subdivisions = 6;
+            let subdivisions = 8;
             for i in 0..subdivisions {
-                let a_perspective: f32 = f32::lerp(self.vertices[*a].z, self.vertices[*b].z, (i as f32) / (subdivisions as f32)) + self.z_dist; 
-                let b_perspective: f32 = f32::lerp(self.vertices[*a].z, self.vertices[*b].z, ((i + 1) as f32) / (subdivisions as f32)) + self.z_dist;
+                let a_perspective: f32 = f32::lerp(self.vertices[*a][2], self.vertices[*b][2], (i as f32) / (subdivisions as f32)) + self.z_dist; 
+                let b_perspective: f32 = f32::lerp(self.vertices[*a][2], self.vertices[*b][2], ((i + 1) as f32) / (subdivisions as f32)) + self.z_dist;
                 
                 let center_of_edge = self.vertices[*a].lerp(&self.vertices[*b], ((i as f32) + 0.5) / (subdivisions as f32));
                 
@@ -53,16 +53,16 @@ impl Renderer {
                     .skip(3).map(|h| h*h).sum::<f32>().sqrt();
                 
                 draw_line(
-                    self.zoom * f32::lerp(self.vertices[*a].x, self.vertices[*b].x, (i as f32) / (subdivisions as f32)) / a_perspective + screen_width()/2., 
-                    self.zoom * f32::lerp(self.vertices[*a].y, self.vertices[*b].y, (i as f32) / (subdivisions as f32)) / a_perspective + screen_height()/2., 
-                    self.zoom * f32::lerp(self.vertices[*a].x, self.vertices[*b].x, ((i + 1) as f32) / (subdivisions as f32)) / b_perspective + screen_width()/2., 
-                    self.zoom * f32::lerp(self.vertices[*a].y, self.vertices[*b].y, ((i + 1) as f32) / (subdivisions as f32)) / b_perspective + screen_height()/2., 
+                    self.zoom * f32::lerp(self.vertices[*a][0], self.vertices[*b][0], (i as f32) / (subdivisions as f32)) / a_perspective + screen_width()/2., 
+                    self.zoom * f32::lerp(self.vertices[*a][1], self.vertices[*b][1], (i as f32) / (subdivisions as f32)) / a_perspective + screen_height()/2., 
+                    self.zoom * f32::lerp(self.vertices[*a][0], self.vertices[*b][0], ((i + 1) as f32) / (subdivisions as f32)) / b_perspective + screen_width()/2., 
+                    self.zoom * f32::lerp(self.vertices[*a][1], self.vertices[*b][1], ((i + 1) as f32) / (subdivisions as f32)) / b_perspective + screen_height()/2., 
                     self.line_width,
                     Color { 
                         r: 1.0,
                         g: 1.0,
                         b: 1.0,
-                        a: (1.0 - clamp(f32::inverse_lerp(self.near, self.far, center_of_edge.z), 0.0, 1.0)) * f32::max(1.0 - (off_axis / self.off_volume_fade), 0.0)
+                        a: (1.0 - clamp(f32::inverse_lerp(self.near, self.far, center_of_edge[2]), 0.0, 1.0)) * f32::max(1.0 - (off_axis / self.off_volume_fade), 0.0)
                     }
                 );
             }
