@@ -1,3 +1,5 @@
+![omnitruncated 120-cell](demo_image.JPG)
+
 # Description
 
 This program takes a [Coxeter matrix](https://en.wikipedia.org/wiki/Coxeter_group#Coxeter_matrix_and_Schl%C3%A4fli_matrix) 
@@ -31,5 +33,3 @@ Q/A: increase/decrease near fade distance
 W/S: increase/decrease far fade distance
 E/D: increase/decreae off-volume fade distance
 ```
-
-!(demo_image.jpg)
