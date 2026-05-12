@@ -33,3 +33,7 @@ Q/A: increase/decrease near fade distance
 W/S: increase/decrease far fade distance
 E/D: increase/decreae off-volume fade distance
 ```
+
+# Credits
+
+Improved version of renderer was implemented by [Tessimal](https://fifty-third-dimension.neocities.org)
